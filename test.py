@@ -11,7 +11,7 @@ def home():
 
 @app.route('/data')
 def data():
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1', aws_access_key_id='AKIA2WYEQAQ6KE2HU6M5', aws_secret_access_key='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')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1', aws_access_key_id='', aws_secret_access_key='')
     table = dynamodb.Table('DataRaspi2')
 
     response = table.scan() 
