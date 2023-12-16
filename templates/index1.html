@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map và Biểu đồ</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        #map {
+            height: 50%;
+        }
+
+        #chart {
+            height: 50%;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.23.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="chart"></div>
+
+    <script>
+        // // the smooth zoom function
+        // function smoothZoom(map, max, cnt) {
+        //     if (cnt >= max) {
+        //         return;
+        //     } else {
+        //         z = google.maps.event.addListener(map, 'zoom_changed', function(event){
+        //             google.maps.event.removeListener(z);
+        //             smoothZoom(map, max, cnt + 1);
+        //         });
+        //         setTimeout(function(){map.setZoom(cnt)}, 80);
+        //     }
+        // } 
+
+        // var pubnub = new PubNub({
+        //     subscribeKey: "sub-c-4659c733-5c10-4662-84a3-43b2f87d3641",
+        //     ssl: true
+        // });  
+        // var map, marker; 
+        
+        
+        // var longitude = 106.752;
+        // var latitude = 10.867;
+        // pubnub.addListener({
+        //     message: function(m) {
+        //         var channelName = m.channel;
+        //         var channelGroup = m.subscription;
+        //         var pubTT = m.timetoken;
+        //         var msg = m.message;
+        //         longitude = msg.longitude;
+        //         latitude = msg.latitude;
+        //         var publisher = m.publisher;
+        //         var myLatlng = new google.maps.LatLng(latitude, longitude);
+        //         var marker = new google.maps.Marker({
+        //             position: myLatlng,
+        //             title:"PubNub GPS"
+        //         });
+        //         map.setCenter(marker.position);
+        //         smoothZoom(map, 14, map.getZoom());
+        //         marker.setMap(map);
+        //     },
+        //     // ... (các hàm xử lý khác)
+        // });
+        // pubnub.subscribe({
+        //     channels: ['ch1'],
+        // });
+
+        // var map;
+        // function initMap() {
+        //     map = new google.maps.Map(document.getElementById('map'), {
+        //         center: {lat: latitude, lng: longitude},
+        //         zoom: 8
+        //     });
+        //     displayMarker();
+        // }
+
+        // function displayMarker() {
+        //     var position = {lat: latitude, lng: longitude};
+
+        //     if (!marker) {
+        //         marker = new google.maps.Marker({
+        //             position: position,
+        //             map: map  
+        //         });
+        //     } else { 
+        //         marker.setPosition(position); 
+        //     }
+
+        //     map.setCenter(position);  
+        // }
+
+        $(document).ready(function(){
+            function updateData(){
+                $.getJSON('/data', function(data){
+                    var trace = {
+                        x: data.timestamps,
+                        y: data.lon_values,
+                        mode: 'lines'
+                    };
+                    var layout = {
+                        title: 'Biểu đồ AX theo thời gian',
+                        xaxis: {title: 'Thời gian'},
+                        yaxis: {title: 'AX'}
+                    };
+                    Plotly.newPlot('chart', [trace], layout);
+                });
+            }
+
+            updateData();
+            setInterval(updateData, 5000);
+        });
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLuWQHjBa9SMVVDyyqxqTpR2ZwnxwcbGE&callback=initMap"
+    async defer></script>
+</body>
+</html>

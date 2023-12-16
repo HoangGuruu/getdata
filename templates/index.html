@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Biểu đồ từ dữ liệu DynamoDB</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="chart"></div>
+
+    <script>
+    $(document).ready(function(){
+        function updateData(){
+            $.getJSON('/data', function(data){
+                var trace = {
+                    x: data.timestamps,
+                    y: data.ax_values,
+                    mode: 'lines'
+                };
+                var layout = {
+                    title: 'Biểu đồ AX theo thời gian',
+                    xaxis: {title: 'Thời gian'},
+                    yaxis: {title: 'AX'}
+                };
+                Plotly.newPlot('chart', [trace], layout);
+            });
+        }
+        updateData();
+        setInterval(updateData, 5000);  // Cập nhật dữ liệu mỗi 5 giây
+    });
+    </script>
+</body>
+</html>
